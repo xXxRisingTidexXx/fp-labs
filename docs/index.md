@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: page
 title: fp-labs
 tagline: Звіти робіт до курсу "Функціональне програмування"
 ---
