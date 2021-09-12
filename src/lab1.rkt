@@ -1,0 +1,23 @@
+#lang racket
+(define (ones n)
+  (if (= n 0)
+      0
+      (+ 1 (ones (bitwise-and n (- n 1))))))
+(define (tail-ones n)
+  (define (partial-ones n a d)
+    (if (= n 0)
+        (values a (+ 1 d))
+        (partial-ones (bitwise-and n (- n 1)) (+ 1 a) (+ 1 d))))
+  (partial-ones n 0 0))
+(define (tail-stamps m x y z)
+  (define (partial-stamps m a x b y c z q)
+    (if (> (* a x) m)
+        q
+        (if (> (* b y) m)
+            (partial-stamps m (+ 1 a) x 0 y 0 z q)
+            (if (> (* c z) m)
+                (partial-stamps m a x (+ 1 b) y 0 z q)
+                (if (= (+ (* a x) (+ (* b y) (* c z))) m)
+                    (partial-stamps m a x b y (+ 1 c) z (+ 1 q))
+                    (partial-stamps m a x b y (+ 1 c) z q))))))
+  (partial-stamps m 0 x 0 y 0 z 0))
