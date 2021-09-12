@@ -1,2 +1,2 @@
 # fp-labs
-Functional programming excersies
+Functional programming exercises.
