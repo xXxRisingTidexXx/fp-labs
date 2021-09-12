@@ -3,5 +3,3 @@ plugins:
   - jekyll-remote-theme
 github:
   is_project_page: false
-title: gabella
-description: null
