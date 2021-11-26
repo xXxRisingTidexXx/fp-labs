@@ -48,20 +48,41 @@
      ; ... та кратні елементи з дописаним списком.
      (append (multiples) elements))))
 
-(define (objective2 cvs m n p)
-  ; В даній процедурі ми впорядковуємо список та відтинаємо від нього елементи.
+(define (objective2 k m n p)
+  ; Симуляція процесу відбору включає 4 параметри кількості кандидатів і відсіяння.
+  (define (select-candidates candidates l)
+    ; У відборі кандидатів добираються l осіб з найвищчими пріоритетами, після чого 
+    ; переможці отримують випадкові модифікації скорів. Це симулює перерахунок рейтингу
+    ; перед черговим переглядом з боку рекрутерів.
+    (map
+     ; Емпірично підібрана формула зміни рейтингу.
+     (lambda (c) (list (first c) (+ (second c) (* 0.5 (random)) -0.3)))
+     ; Відбір l найбільш відповідних кандидатів.
+     (take (sort candidates (lambda (c1 c2) (< (second c1) (second c2)))) l)))
   (let
-      ; Вважаємо, що резюме подані через список пріоритетів.
-      ((candidates (sort cvs <)))
-    ; Наприкінці повертаємо ...
-    (values
-     ; ... всі резюме, ...
-     candidates
-     ; ... ті, що допущені до співбесіди, ...
-     (take candidates m)
-     ; ... ті, що пройшли 1 тур, ...
-     (take candidates (- m n))
-     ; ... ті, що пройшли 2 тур ...
-     (take candidates (- m n p))
-     ; ... та переможець випробувального терміну.
-     (car candidates))))
+      ; Початкова множина претендентів.
+      ((selection (map (lambda (i) (list i (random))) (range k))))
+    (display "Номери та пріоритети кандидатів на відборі:\n")
+    (display selection)
+    (newline)
+    (let
+        ; Обчислення тих, хто пройшли в 1 тур.
+        ((tour1 (select-candidates selection m)))
+      (display "Номери та пріоритети кандидатів у 1 турі:\n")
+      (display tour1)
+      (newline)
+      (let
+          ; Обчислення тих, хто пройшли в 2 тур.
+          ((tour2 (select-candidates tour1 (- m n))))
+        (display "Номери та пріоритети кандидатів у 2 турі:\n")
+        (display tour2)
+        (newline)
+        (let
+            ; Обчислення тих, хто пройшли на випробувальний термін.
+            ((probation (select-candidates tour2 (- m n p))))
+          (display "Номери та пріоритети кандидатів на випробувальному терміні:\n")
+          (display probation)
+          (newline)
+          (display "Номер та пріоритет переможця відбору:\n")
+          ; Обрахунок переможця конкурсу.
+          (display (car (select-candidates probation 1))))))))
