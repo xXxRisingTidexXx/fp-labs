@@ -1,7 +1,4 @@
 #lang racket
-; Імпортування модуля з деком.
-(require pfds/deque/bankers)
-
 (define (sum-and-product v)
   ; В даній процедурі знаходиться сума й добуток частин вектора.
   (define (negative-ref i step)
@@ -13,7 +10,6 @@
       ((negative? (vector-ref v i)) i)
       ; Інакше переміщуємося на сусідню комірку.
       (else (negative-ref (+ i step) step))))
-  
   (let
       ; Обчислюємо позицію крайнього лівого від'ємного елементу.
       ((left (negative-ref 0 1))
@@ -29,19 +25,21 @@
       ; Й добуток комірок після правої межі.
       (apply * (vector->list (vector-take-right v (- (vector-length v) right 1))))))))
 
-(define (symmetric? d)
+(define (symmetric? chars)
   ; Дана функція визначає, чи є заданий дек симетричним.
   (if
    ; Якщо дек уже порожній - він гарантовано симетричний.
-   (empty? d)
+   (vector-empty? chars)
    "YES"
    (let
        ; Запам'ятаємо всі елементи, окрім першого.
-       ((t (tail d)))
+       ((tail (vector-drop chars 1))
+        (head (vector-ref chars 0))
+        (last (vector-ref chars (- (vector-length chars) 1))))
      (cond
        ; Дана умова перевіряє випадок дека з непарним числом елементів.
-       ((empty? t) "YES")
+       ((vector-empty? tail) "YES")
        ; Якщо початковий і кінцевий елементи однакові, то продовжуємо звужувати коло.
-       ((eq? (head d) (last d)) (symmetric? (init t)))
+       ((eq? head last) (symmetric? (vector-drop-right tail 1)))
        ; У разі знаходження розбіжності - повідомляємо про неї.
-       (else (list "NO" (head d) (last d)))))))
+       (else (list "NO" head last))))))
