@@ -52,7 +52,7 @@ description: Обробка раціональних та комплексних
 
 Після знесення дробів у один бік і зведення до спільного знаменника маємо отримати квадратичне рівння:
 
-![formula](https://quicklatex.com/cache3/13/ql_b85345d213923dd1da1205d1e9f1c313_l3.png)
+![formula](https://quicklatex.com/cache3/a6/ql_c3e1121c839b216b0a929987fec444a6_l3.png)
 
 Коренями якого будуть значення:
 
@@ -70,10 +70,10 @@ description: Обробка раціональних та комплексних
         ((restriction
           ; Знаходимо значення, при яких знаменники перетворюються в 0.
           (map
-           (lambda (p) (/ (first p) (second p)))
+           (lambda (p) (/ (second p) (first p)))
            ; Залишаємо тільки ті вирази, що місять змінну.
            (filter
-            (lambda (p) (not (= 0 (second p))))
+            (lambda (p) (not (= 0 (first p))))
             ; Беремо лише знаменники дробів.
             (map
              (lambda (i) (list-ref pairs i))
